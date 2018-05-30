@@ -3,13 +3,14 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 
 public class Estadistica extends JFrame implements ActionListener{
 
                 JPanel paneldatos, paneldatosarriba, paneldatosabajo, paneldatoscentro,paneldatoscentroi, paneldatoscentroc, paneldatoscentrod, panelcalculos;
-                JLabel lbldato, lblmedia, lblmoda, lblmediana, lblcuartil1, lblcuartil3, lbldtipica, lblvarianza, lblcovarianza;
-                JTextField txtdato, txtmedia, txtmoda, txtmediana, txtcuartil1, txtcuartil3, txtdtipica, txtvarianza, txtcovarianza;
-                JButton btnagregar, btnup, btndown, btnquitar, btnlimpiar, btnordenar, btncalcular;
+                JLabel lbldato, lblmedia, lblmoda, lblmediana, lblcuartil1, lblcuartil3, lbldtipica, lblvarianza, lblcovarianza,lbltamaño;
+                JTextField txtdato, txtmedia, txtmoda, txtmediana, txtcuartil1, txtcuartil3, txtdtipica, txtvarianza, txtcovarianza,txttamaño;
+                JButton btnagregar, btnup, btndown, btnquitar, btnlimpiar, btnordenar, btncalcular,btnacercade;
                 JList lista;
                 JScrollPane desliza;
                 DefaultListModel modelo;
@@ -45,6 +46,10 @@ public class Estadistica extends JFrame implements ActionListener{
                                paneldatosarriba.add(lbldato);
                                paneldatosarriba.add(txtdato);
                                paneldatosarriba.add(btnagregar);
+                               btnordenar=new JButton("Ordenar");
+                               btncalcular=new JButton("Calcular");
+                               paneldatosarriba.add(btnordenar);
+                               paneldatosarriba.add(btncalcular);
                               
                                //Agregando objetos a paneldatoscentro
                                btnup=new JButton("Arriba");
@@ -66,10 +71,12 @@ public class Estadistica extends JFrame implements ActionListener{
                                paneldatoscentrod.add(btnlimpiar);
                               
                                //Agregando objetos a paneldatosabajo
-                               btnordenar=new JButton("Ordenar");
-                               btncalcular=new JButton("Calcular");
-                               paneldatosabajo.add(btnordenar);
-                               paneldatosabajo.add(btncalcular);
+                               btnacercade=new JButton("Acerca de");
+                               lbltamaño=new JLabel("Tamaño de la muestra: ");
+                               txttamaño=new JTextField(15);
+                               paneldatosabajo.add(lbltamaño);
+                               paneldatosabajo.add(txttamaño);
+                               paneldatosabajo.add(btnacercade);
                               
                                //Agregando objetos a panelcalculos
                                lblmedia=new JLabel("Media");
@@ -122,11 +129,14 @@ public class Estadistica extends JFrame implements ActionListener{
                                btnup.addActionListener(this);
                                btndown.addActionListener(this);
                                btnordenar.addActionListener(this);
-                               btncalcular.addActionListener(this);                     
-                              
+                               btncalcular.addActionListener(this);  
+                               btnacercade.addActionListener(this);
                 }
 
                 public void actionPerformed(ActionEvent e){
+                               if(e.getActionCommand().equals(btnacercade.getText())){
+                                               Acercade();
+                               }
                                if(e.getActionCommand().equals(btnagregar.getText())){
                                                Agregarobjeto();
                                }
@@ -155,6 +165,7 @@ public class Estadistica extends JFrame implements ActionListener{
                                                totales.Cuartil3();
                                                totales.DesviacionTipica();
                                                totales.Varianza();
+                                               totales.Tamaño();
                                }
                 }
                
@@ -183,6 +194,7 @@ public class Estadistica extends JFrame implements ActionListener{
                                txtdtipica.setText("");
                                txtvarianza.setText("");
                                txtcovarianza.setText("");
+                               txttamaño.setText("");
                 }
                
                 //Metodo Up: Mueve el objeto seleccionado hacia arriba
@@ -236,6 +248,31 @@ public class Estadistica extends JFrame implements ActionListener{
                                                                }                             
                                                }
                                }
+                }//Ventana de información
+                public void Acercade (){
+                              
+        JFrame info= new JFrame();
+        JPanel acercade = new JPanel();
+             
+        JLabel label = new JLabel( "<html> Este programa fue creado por: "
+                + "<br> Bryan Alejandro Luis Torres - 20142020136"
+                + "<br> Sergio Alejandro Gómez Lara - 20161020046"
+                + "<br> Para la materia de Estadística"
+                + "<br>Presentado A: CARLOS ALFONSO ACOSTA SERRANO."
+                + "<br> <center>Universidad Distrital Francisco José de Caldas<center>"
+                + "<br> <center>Facultad de Ingeniería - Sistemas<center>"
+                + "<br><center> 1 de Junio de 2018<center>"
+                + "</html>");//<br> <img src=\"http://die.udistrital.edu.co/file/png/logoudpng\">\n
+       
+        info.setTitle("Acerca de");
+        info.setLocationRelativeTo(null);
+        info.setSize(350, 300);
+        info.setVisible(true);
+        info.add(acercade);
+        acercade.add(label);
+        label.setIcon(new ImageIcon("http://die.udistrital.edu.co/file/png/logoudpng"));
+     
+                    
                 }
                
                 //Clase Calcular: Calcula los datos necesarios con los datos que estan en la JList
@@ -289,8 +326,14 @@ public class Estadistica extends JFrame implements ActionListener{
                                                                }                                                            
                                                                if(totalveces>total){
                                                                                               total=totalveces;
-                                                                                              txtmoda.setText("El numero "+String.valueOf(numero)+" Se Repite "+String.valueOf(total)+" Veces");
+                                                                                              txtmoda.setText("La moda es: "+String.valueOf(numero)+", Se Repite "+String.valueOf(total)+" Veces");
+                                                               if (totalveces==1){
+                                                                   txtmoda.setText("No existe moda");
                                                                }
+                                                               }
+                                                               
+                                                                   
+                                                               
                                                }
                                }
                               
@@ -325,7 +368,7 @@ public class Estadistica extends JFrame implements ActionListener{
                               
                                //Metodo Cuartil 1
                                public void Cuartil1(){
-                                               double cuartil=0.25*modelo.getSize();
+                                               double cuartil=(0.25)*modelo.getSize();
                                                double residuo=cuartil%1;
                                                double total=0;
                                                if(residuo>0){
@@ -342,7 +385,7 @@ public class Estadistica extends JFrame implements ActionListener{
                               
                                //Metodo Cuartil 3
                                public void Cuartil3(){
-                                               double cuartil=0.75*modelo.getSize();
+                                               double cuartil=(0.75)*modelo.getSize();
                                                double residuo=cuartil%1;
                                                double total=0;
                                                if(residuo>0){
@@ -415,6 +458,10 @@ public class Estadistica extends JFrame implements ActionListener{
                                                cov = var*var;
                                                txtcovarianza.setText(String.valueOf(cov));
                                               
+                               }
+                               //Tamaño de la muestra
+                               public void Tamaño(){
+                                   txttamaño.setText(String.valueOf(modelo.getSize()));
                                }
                               
                 }//Fin de la clase Calcular
